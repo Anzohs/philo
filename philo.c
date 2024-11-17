@@ -1,13 +1,25 @@
 #include "philo.h"
 
-int	main(int argc, char **argv)
+static int	error_argc(void)
 {
-	if (argc < 4 || argc > 6)
-	{
 		printf("%s", ERROR_ARGS);
 		printf("%s", ERROR_USAGE);
 		printf("%s", ERROR_USAGE1);
 		return (0);
-	}
+}
 
+static int	error_types(void)
+{
+	printf("%s", "It should be positive int as a arguments!\n");
+	printf("%s", "Example: \n");
+	printf("%s", EXAMPLE);
+	return (0);	
+}
+
+int	main(int argc, t_str *argv)
+{
+	if (argc < 4 || argc > 6)
+		return (error_argc());
+	if (!parse_args(argc, argv))
+		return (error_types());
 }
