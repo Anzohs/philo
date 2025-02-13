@@ -27,6 +27,11 @@ void    my_sleep(int start);
 int     time_dif(long current);
 long    get_time(void);
 
+
+//initialize the main struct
+bool    waiter_init(t_waiter *waiter, int ac, t_str *av);
+
+
 //rotine 
 void    philo_eat(t_philo *p);
 void    philo_sleep(t_philo *p);

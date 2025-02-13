@@ -18,6 +18,6 @@ void    my_sleep(int start)
     long    current;
 
     current = get_time();
-    while (get_time() - current  < start)
+    while (time_dif(current)  < start)
         usleep(50);
 }

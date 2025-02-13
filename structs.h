@@ -7,11 +7,10 @@
 typedef struct s_philo
 {
     long    last_meal;
-    int nb_times_eat;
-    int id;
+    int     nb_times_eat;
+    int     id;
     pthread_mutex_t *r_fork;
     pthread_mutex_t *l_fork;
-    struct s_philo  *next;
 }       t_philo;
 
 
@@ -23,7 +22,8 @@ typedef struct  s_waiter
     long    t_to_sleep;
     long    t_to_die;
     long    t_start;
-    pthread_mutex_t *print;
+    pthread_mutex_t print;
+    pthread_mutex_t *p_t;
     bool    dead;
     t_philo *p;
 }       t_waiter;

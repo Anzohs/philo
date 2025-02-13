@@ -1,5 +1,10 @@
 #include "philo.h"
 
+static void	free_waiter(t_waiter *w)
+{
+	free(w);
+}
+
 static int	error_argc(void)
 {
 		printf("%s", ERROR_ARGS);
@@ -27,5 +32,9 @@ int	main(int argc, t_str *argv)
 	w = (t_waiter *)ft_calloc(sizeof(t_waiter), 1);
 	if (!w)
 		return (printf("Memory allocation error \n"));
-	
+	if (!waiter_init(w, argc, argv))
+		return (free_waiter(w), 1);
+	return (free_waiter(w), 1);
 }
+
+//https://github.com/wtandoor/philo42/blob
