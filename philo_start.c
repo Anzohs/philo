@@ -1,29 +1,49 @@
 
 #include "philo.h"
 
-void    routine(t_philo *p)
+static void    *philo_dead(t_temp *tmp)
 {
-    free(p);
+
+}
+
+static void    *routine(t_temp *t)
+{
+    t_philo *ph;
+
+    ph = &t->w[t->index];
+    if (ph->id % 2 == 0)
+        my_sleep(t->w->t_to_eat);
+    while (t->w->dead && ph->nb_times_eat != t->w->nb_meal)
+    {
+        pthread_mutex_lock(ph->l_fork);
+        pthread_mutex_lock(ph->r_fork);
+        philo_eat(ph);
+        pthread_mutex_unlock(ph->l_fork);
+        pthread_mutex_unlock(ph->r_fork);
+        philo_sleep(ph);
+        philo_think(ph);
+    }
+    reutnr (NULL);
 }
 
 static void init_philo(t_waiter *w, pthread_t *t)
 {
-    int i;
+    t_temp  temp;
 
-    i = -1;
-    while (++i < w->nb_philos)
+    temp.index = -1;
+    while (++temp.index < w->nb_philos)
     {
-        pthread_mutex_init(&w->p_t[i], NULL);
-        w->p[i].id = i + 1;
-        w->p[i].r_fork = &w->p_t[i];
-        if (i != w->nb_philos - 1)
-            w->p[i].l_fork = &w->p_t[i + 1];
+        pthread_mutex_init(&w->p_t[temp.index], NULL);
+        w->p[temp.index].id = temp.index + 1;
+        w->p[temp.index].r_fork = &w->p_t[temp.index];
+        if (temp.index != w->nb_philos - 1)
+            w->p[temp.index].l_fork = &w->p_t[temp.index + 1];
         else
-            w->p[i].l_fork = &w->p_t[0];
-        pthread_create(&t[i], NULL, &routine, &w->p[i]);
+            w->p[temp.index].l_fork = &w->p_t[0];
+        pthread_create(&t[temp.index], NULL, &routine, &temp);
     }
     usleep(200);
-    pthread_create(&t[i], NULL, &routine, (void *)(w->p));
+    pthread_create(&t[temp.index], NULL, &philo_dead, &temp);
 }
 
 void    philo_start(t_waiter *w)
@@ -37,4 +57,12 @@ void    philo_start(t_waiter *w)
     w->p_t = (pthread_mutex_t *)ft_calloc(sizeof(pthread_mutex_t), w->nb_philos + 1);
     pthread_mutex_init(&w->print, NULL);
     w->t_start = get_time();
+    init_philo(w, thread);
+    while (++i < w->nb_philos)
+        pthread_mutex_destroy(&w->p_t[i]);
+    pthread_join(thread[i], NULL);
+    pthread_mutex_destroy(&w->print);
+    free(thread);
+    free(w->p);
+    free(w->p_t);
 }

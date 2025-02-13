@@ -28,4 +28,10 @@ typedef struct  s_waiter
     t_philo *p;
 }       t_waiter;
 
+typedef struct s_temp
+{
+    int         index;
+    t_waiter    *w;
+}           t_temp;
+
 #endif
