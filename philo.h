@@ -18,4 +18,18 @@ bool	parse_args(int argc, t_str *argv);
 
 //memory alocation, creating my own calloc. 
 void	*ft_calloc(size_t count, size_t size);
+
+//char * into long
+long    ft_atol(t_str s);
+
+//time management
+void    my_sleep(int start);
+int     time_dif(long current);
+long    get_time(void);
+
+//rotine 
+void    philo_eat(t_philo *p);
+void    philo_sleep(t_philo *p);
+void    philo_think(t_philo *p);
+
 #endif

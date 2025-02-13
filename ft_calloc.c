@@ -1,6 +1,6 @@
 #include "philo.h"
 
-void	*ft_call(size_t c)
+static void	*ft_call(size_t c)
 {
 	char	*ptr;
 	size_t	i;

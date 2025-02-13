@@ -1,7 +1,7 @@
 NAME = philo
 CC = cc
 FLAGS = -Wall -Wextra -Werror
-SRC = ft_calloc.c parse_args.c philo.c
+SRC = ft_calloc.c parse_args.c philo.c get_time.c ft_atol.c rotine.c
 OBJ_DIR = obj
 
 OBJ := $(patsubst %.c, $(OBJ_DIR)/%.o,$(SRC))
