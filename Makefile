@@ -1,10 +1,10 @@
-Name = philo
+NAME = philo
 CC = cc
 FLAGS = -Wall -Wextra -Werror
 SRC = ft_calloc.c parse_args.c philo.c
 OBJ_DIR = obj
 
-OBJ := $(%.c, $(OBJ_DIR)/%.o,$(SRC))
+OBJ := $(patsubst %.c, $(OBJ_DIR)/%.o,$(SRC))
 
 all:	$(NAME)
 
