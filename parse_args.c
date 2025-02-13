@@ -1,13 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_args.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hladeiro <hladeiro@student.42lisboa.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/13 19:04:31 by hladeiro          #+#    #+#             */
+/*   Updated: 2025/02/13 19:04:32 by hladeiro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-static size_t len(t_str s)
+static size_t	len(t_str s)
 {
 	size_t	i;
 
-	if(!s || !(*s))
+	if (!s || !(*s))
 		return (12);
 	i = 0;
-	while(s[i])
+	while (s[i])
 		i++;
 	return (i);
 }
@@ -28,7 +40,7 @@ bool	parse_args(int argc, t_str *argv)
 	int	i;
 
 	i = 0;
-	while(++i < argc)
+	while (++i < argc)
 		if (len(argv[i]) > 11 || !is_digit(argv[i]))
 			return (false);
 	return (true);

@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hladeiro <hladeiro@student.42lisboa.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/13 19:04:52 by hladeiro          #+#    #+#             */
+/*   Updated: 2025/02/13 19:04:53 by hladeiro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 static int	error_argc(void)
 {
-		printf("%s", ERROR_ARGS);
-		printf("%s", ERROR_USAGE);
-		printf("%s", ERROR_USAGE1);
-		return (0);
+	printf("%s", ERROR_ARGS);
+	printf("%s", ERROR_USAGE);
+	printf("%s", ERROR_USAGE1);
+	return (0);
 }
 
 static int	error_types(void)
@@ -13,7 +25,7 @@ static int	error_types(void)
 	printf("%s", "It should be positive int as a arguments!\n");
 	printf("%s", "Example: \n");
 	printf("%s", EXAMPLE);
-	return (0);	
+	return (0);
 }
 
 int	main(int argc, t_str *argv)
@@ -32,4 +44,4 @@ int	main(int argc, t_str *argv)
 	return (free(w), 1);
 }
 
-//https://github.com/wtandoor/philo42/blob
+// https://github.com/wtandoor/philo42/blob
