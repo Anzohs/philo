@@ -11,11 +11,12 @@
 /* ************************************************************************** */
 
 #include "philo.h"
+#include "structs.h"
 
 static bool	is_dead(t_philo *p, t_waiter *w, int index)
 {
 	pthread_mutex_lock(&w->print);
-	if (w->t_to_die + 1 <= time_dif(p[index].last_meal))
+	if (w->t_to_die + 1 <= time_dif(w->t_start - p[index].last_meal))
 	{
 		w->dead = true;
 		printf("dead %i\n", p[index].id);
@@ -37,18 +38,17 @@ static bool	is_dead(t_philo *p, t_waiter *w, int index)
 
 static void	*philo_dead(void *tmp)
 {
-	t_temp	*t;
-	t_philo	*p;
-	int		i;
+	t_waiter	*w;
+	int			i;
 
-	t = tmp;
-	p = t->w->p;
+	w = (t_waiter *)tmp;
 	while (1)
 	{
 		i = -1;
-		while (++i < t->w->nb_philos)
+		w->all_eat = 0;
+		while (++i < w->nb_philos)
 		{
-			if (is_dead(p, t->w, i))
+			if (is_dead(w->p, w, i))
 				return (NULL);
 			my_sleep(1);
 		}
@@ -59,51 +59,43 @@ static void	*philo_dead(void *tmp)
 static void	*routine(void *tp)
 {
 	t_philo	*ph;
-	t_temp	t;
 
-	t = *(t_temp *)tp;
-	ph = &t.w->p[t.index];
-	free(tp);
+	ph = (t_philo *) tp;
 	if (ph->id % 2 == 0)
-		my_sleep(t.w->t_to_eat);
-	while (t.w->dead && ph->nb_times_eat != t.w->nb_meal)
+		my_sleep(ph->w->t_to_eat);
+	while (!ph->w->dead && ph->nb_times_eat != ph->w->nb_meal)
 	{
 		pthread_mutex_lock(ph->l_fork);
 		pthread_mutex_lock(ph->r_fork);
-		philo_eat(ph, t.w);
+		philo_eat(ph, ph->w);
 		pthread_mutex_unlock(ph->l_fork);
 		pthread_mutex_unlock(ph->r_fork);
-		philo_sleep(ph, t.w);
-		philo_think(ph, t.w);
+		philo_sleep(ph, ph->w);
+		philo_think(ph, ph->w);
 	}
 	return (NULL);
 }
 
 static void	init_philo(t_waiter *w, pthread_t *t)
 {
-	t_temp	*temp;
 	int		i;
 
 	i = -1;
 	while (i++ < w->nb_philos)
 	{
-		temp = (t_temp *)ft_calloc((sizeof(t_temp)), 1);
-		temp->index = i;
-		temp->w = w;
 		pthread_mutex_init(&w->p_t[i], NULL);
 		w->p[i].id = i + 1;
+		w->p[i].last_meal = 0;
 		w->p[i].r_fork = &w->p_t[i];
+		w->p[i].w = w;
 		if (i != w->nb_philos - 1)
 			w->p[i].l_fork = &w->p_t[i + 1];
 		else
 			w->p[i].l_fork = &w->p_t[0];
-		pthread_create(&t[i], NULL, &routine, temp);
+		pthread_create(&t[i], NULL, &routine, (void *)(&w->p[i]));
 	}
 	usleep(200);
-	temp = (t_temp *)ft_calloc((sizeof(t_temp)), 1);
-	temp->index = i;
-	temp->w = w;
-	pthread_create(&t[i], NULL, &philo_dead, temp);
+	pthread_create(&t[i], NULL, &philo_dead, (void *)(w));
 }
 
 void	philo_start(t_waiter *w)
@@ -116,11 +108,12 @@ void	philo_start(t_waiter *w)
 	thread = (pthread_t *)ft_calloc(sizeof(pthread_t), w->nb_philos + 1);
 	w->p_t = (pthread_mutex_t *)ft_calloc(sizeof(pthread_mutex_t), w->nb_philos
 			+ 1);
+	w->dead = false;
 	pthread_mutex_init(&w->print, NULL);
 	w->t_start = get_time();
 	init_philo(w, thread);
 	while (++i < w->nb_philos)
-		pthread_join(thread[i], NULL);
+		pthread_mutex_destroy(&w->p_t[i]);
 	pthread_join(thread[i], NULL);
 	pthread_mutex_destroy(&w->print);
 	free(thread);

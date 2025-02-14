@@ -15,6 +15,8 @@
 
 # include "libs.h"
 
+typedef struct s_waiter	t_waiter;
+
 typedef struct s_philo
 {
 	long			last_meal;
@@ -22,6 +24,7 @@ typedef struct s_philo
 	int				id;
 	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*l_fork;
+	t_waiter		*w;
 }					t_philo;
 
 typedef struct s_waiter
@@ -38,11 +41,5 @@ typedef struct s_waiter
 	bool			dead;
 	t_philo			*p;
 }					t_waiter;
-
-typedef struct s_temp
-{
-	int				index;
-	t_waiter		*w;
-}					t_temp;
 
 #endif

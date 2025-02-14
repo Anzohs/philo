@@ -41,6 +41,7 @@ int	main(int argc, char *argv[])
 		return (printf("Memory allocation error \n"));
 	if (!waiter_init(w, argc, argv))
 		return (free(w), 1);
+	w->t_start = get_time();
 	philo_start(w);
 	return (free(w), 1);
 }
