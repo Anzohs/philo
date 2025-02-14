@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-long	ft_atol(t_str s)
+long	ft_atol(char *s)
 {
 	long	i;
 

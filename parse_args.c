@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-static size_t	len(t_str s)
+static size_t	len(char  *s)
 {
 	size_t	i;
 
@@ -24,7 +24,7 @@ static size_t	len(t_str s)
 	return (i);
 }
 
-static bool	is_digit(t_str s)
+static bool	is_digit(char *s)
 {
 	size_t	i;
 
@@ -35,7 +35,7 @@ static bool	is_digit(t_str s)
 	return (true);
 }
 
-bool	parse_args(int argc, t_str *argv)
+bool	parse_args(int argc, char *argv[])
 {
 	int	i;
 

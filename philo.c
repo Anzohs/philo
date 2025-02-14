@@ -28,7 +28,7 @@ static int	error_types(void)
 	return (0);
 }
 
-int	main(int argc, t_str *argv)
+int	main(int argc, char *argv[])
 {
 	t_waiter	*w;
 
@@ -41,6 +41,7 @@ int	main(int argc, t_str *argv)
 		return (printf("Memory allocation error \n"));
 	if (!waiter_init(w, argc, argv))
 		return (free(w), 1);
+	philo_start(w);
 	return (free(w), 1);
 }
 

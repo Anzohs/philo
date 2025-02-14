@@ -27,23 +27,25 @@
 // funtions of the program
 
 // parsing function of the arguments
-bool	parse_args(int argc, t_str *argv);
+bool	parse_args(int argc, char **argv);
 
 // memory alocation, creating my own calloc.
 void	*ft_calloc(size_t count, size_t size);
 
 // char * into long
-long	ft_atol(t_str s);
+long	ft_atol(char *s);
 
 // time management
 void	my_sleep(int start);
 int		time_dif(long current);
 long	get_time(void);
 // initialize the main struct
-bool	waiter_init(t_waiter *waiter, int ac, t_str *av);
+bool	waiter_init(t_waiter *waiter, int ac, char **av);
 // rotine
 void	philo_eat(t_philo *p, t_waiter *w);
 void	philo_sleep(t_philo *p, t_waiter *w);
 void	philo_think(t_philo *p, t_waiter *w);
+//program start
+void	philo_start(t_waiter *w);
 
 #endif

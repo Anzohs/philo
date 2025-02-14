@@ -11,15 +11,29 @@
 /* ************************************************************************** */
 
 #include "philo.h"
+#include "structs.h"
 #include <stdbool.h>
 
 static bool	is_dead(t_philo *p, t_waiter *w, int index)
 {
+	pthread_mutex_lock(&w->print);
 	if (w->t_to_die + 1 <= time_dif(p[index].last_meal))
-		return (w->dead = true, printf("dead %i", p[index].id), true);
+	{
+		w->dead = true;
+		printf("dead %i\n", p[index].id);
+		pthread_mutex_unlock(&w->print);
+		return (true);
+	}
 	if (p[index].nb_times_eat == w->nb_meal)
+	{
 		if (++w->all_eat == w->nb_philos)
-			return (printf("All ate"), true);
+		{
+			printf("All ate\n");
+			pthread_mutex_unlock(&w->print);
+			return (true);
+		}
+	}
+	pthread_mutex_unlock(&w->print);
 	return (false);
 }
 
@@ -47,43 +61,51 @@ static void	*philo_dead(void *tmp)
 static void	*routine(void *tp)
 {
 	t_philo	*ph;
-	t_temp	*t;
+	t_temp	t;
 
-	t = tp;
-	ph = &t->w->p[t->index];
+	t = *(t_temp *)tp;
+	ph = &t.w->p[t.index];
+	free(tp);
 	if (ph->id % 2 == 0)
-		my_sleep(t->w->t_to_eat);
-	while (t->w->dead && ph->nb_times_eat != t->w->nb_meal)
+		my_sleep(t.w->t_to_eat);
+	while (t.w->dead && ph->nb_times_eat != t.w->nb_meal)
 	{
 		pthread_mutex_lock(ph->l_fork);
 		pthread_mutex_lock(ph->r_fork);
-		philo_eat(ph, t->w);
+		philo_eat(ph, t.w);
 		pthread_mutex_unlock(ph->l_fork);
 		pthread_mutex_unlock(ph->r_fork);
-		philo_sleep(ph, t->w);
-		philo_think(ph, t->w);
+		philo_sleep(ph, t.w);
+		philo_think(ph, t.w);
 	}
 	return (NULL);
 }
 
 static void	init_philo(t_waiter *w, pthread_t *t)
 {
-	t_temp	temp;
+	t_temp	*temp;
+	int		i;
 
-	temp.index = -1;
-	while (++temp.index < w->nb_philos)
+	i = -1;
+	while (i++ < w->nb_philos)
 	{
-		pthread_mutex_init(&w->p_t[temp.index], NULL);
-		w->p[temp.index].id = temp.index + 1;
-		w->p[temp.index].r_fork = &w->p_t[temp.index];
-		if (temp.index != w->nb_philos - 1)
-			w->p[temp.index].l_fork = &w->p_t[temp.index + 1];
+		temp = (t_temp *)ft_calloc((sizeof(t_temp)), 1);
+		temp->index = i;
+		temp->w = w;
+		pthread_mutex_init(&w->p_t[i], NULL);
+		w->p[i].id = i + 1;
+		w->p[i].r_fork = &w->p_t[i];
+		if (i != w->nb_philos - 1)
+			w->p[i].l_fork = &w->p_t[i + 1];
 		else
-			w->p[temp.index].l_fork = &w->p_t[0];
-		pthread_create(&t[temp.index], NULL, &routine, &temp);
+			w->p[i].l_fork = &w->p_t[0];
+		pthread_create(&t[i], NULL, &routine, temp);
 	}
 	usleep(200);
-	pthread_create(&t[temp.index], NULL, &philo_dead, &temp);
+	temp = (t_temp *)ft_calloc((sizeof(t_temp)), 1);
+	temp->index = i;
+	temp->w = w;
+	pthread_create(&t[i], NULL, &philo_dead, temp);
 }
 
 void	philo_start(t_waiter *w)

@@ -22,6 +22,4 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-typedef char	*t_str;
-
 #endif

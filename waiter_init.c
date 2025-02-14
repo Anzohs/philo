@@ -26,7 +26,7 @@ static void	philo_times(t_waiter *w, long t_die, long t_eat, long t_sleep)
 	w->t_to_sleep = t_sleep;
 }
 
-bool	waiter_init(t_waiter *waiter, int ac, t_str *av)
+bool	waiter_init(t_waiter *waiter, int ac, char **av)
 {
 	philo_count(waiter, ft_atol(av[1]));
 	if (!waiter->nb_philos)
