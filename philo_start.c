@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-#include "structs.h"
-#include <stdbool.h>
 
 static bool	is_dead(t_philo *p, t_waiter *w, int index)
 {
@@ -122,7 +120,7 @@ void	philo_start(t_waiter *w)
 	w->t_start = get_time();
 	init_philo(w, thread);
 	while (++i < w->nb_philos)
-		pthread_mutex_destroy(&w->p_t[i]);
+		pthread_join(thread[i], NULL);
 	pthread_join(thread[i], NULL);
 	pthread_mutex_destroy(&w->print);
 	free(thread);

@@ -1,6 +1,6 @@
 NAME = philo
 CC = cc
-FLAGS = -Wall -Wextra -Werror -g
+FLAGS = -Wall -Wextra -Werror -pthread -g
 SRC = ft_atol.c ft_calloc.c get_time.c parse_args.c philo.c philo_start.c rotine.c waiter_init.c
 OBJ_DIR = obj
 
