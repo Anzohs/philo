@@ -19,7 +19,7 @@ void	philo_sleep(t_philo *p, t_waiter *w)
 	pthread_mutex_lock(&w->print);
 	printf("%ld %d is sleeping\n", get_time() - w->t_start, p->id);
 	pthread_mutex_unlock(&w->print);
-	my_sleep(w->t_to_sleep);
+	my_sleep((int)w->t_to_sleep);
 }
 
 void	philo_eat(t_philo *p, t_waiter *w)
@@ -30,7 +30,7 @@ void	philo_eat(t_philo *p, t_waiter *w)
 	printf("%ld %d is eating\n", get_time() - w->t_start, p->id);
 	pthread_mutex_unlock(&w->print);
 	p->last_meal = time_dif(w->t_start);
-	my_sleep(w->t_to_eat);
+	my_sleep((int)w->t_to_eat);
 	if (p->nb_times_eat < INT_MAX)
 		p->nb_times_eat++;
 }

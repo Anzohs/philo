@@ -15,10 +15,10 @@
 
 static bool	is_dead(t_philo *p, t_waiter *w, int index)
 {
-	pthread_mutex_lock(&w->print);
-	if (w->t_to_die + 1 <= time_dif(w->t_start - p[index].last_meal))
+	if (w->t_to_die + 1 <= time_dif(w->t_start) - p[index].last_meal)
 	{
 		w->dead = true;
+		pthread_mutex_lock(&w->print);
 		printf("dead %i\n", p[index].id);
 		pthread_mutex_unlock(&w->print);
 		return (true);
@@ -27,12 +27,12 @@ static bool	is_dead(t_philo *p, t_waiter *w, int index)
 	{
 		if (++w->all_eat == w->nb_philos)
 		{
+			pthread_mutex_lock(&w->print);
 			printf("All ate\n");
 			pthread_mutex_unlock(&w->print);
 			return (true);
 		}
 	}
-	pthread_mutex_unlock(&w->print);
 	return (false);
 }
 
@@ -60,9 +60,9 @@ static void	*routine(void *tp)
 {
 	t_philo	*ph;
 
-	ph = (t_philo *) tp;
+	ph = (t_philo *)tp;
 	if (ph->id % 2 == 0)
-		my_sleep(ph->w->t_to_eat);
+		my_sleep((int)ph->w->t_to_eat);
 	while (!ph->w->dead && ph->nb_times_eat != ph->w->nb_meal)
 	{
 		pthread_mutex_lock(ph->l_fork);
@@ -78,10 +78,10 @@ static void	*routine(void *tp)
 
 static void	init_philo(t_waiter *w, pthread_t *t)
 {
-	int		i;
+	long	i;
 
 	i = -1;
-	while (i++ < w->nb_philos)
+	while (++i < w->nb_philos)
 	{
 		pthread_mutex_init(&w->p_t[i], NULL);
 		w->p[i].id = i + 1;

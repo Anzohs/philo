@@ -45,7 +45,7 @@ bool	waiter_init(t_waiter *waiter, int ac, char **av);
 void	philo_eat(t_philo *p, t_waiter *w);
 void	philo_sleep(t_philo *p, t_waiter *w);
 void	philo_think(t_philo *p, t_waiter *w);
-//program start
+// program start
 void	philo_start(t_waiter *w);
 
 #endif

@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-static size_t	len(char  *s)
+static size_t	len(char *s)
 {
 	size_t	i;
 
