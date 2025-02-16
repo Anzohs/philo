@@ -6,7 +6,7 @@
 /*   By: hladeiro <hladeiro@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:04:59 by hladeiro          #+#    #+#             */
-/*   Updated: 2025/02/16 18:28:15 by hladeiro         ###   ########.fr       */
+/*   Updated: 2025/02/16 18:32:28 by hladeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,7 @@ static bool	is_dead(t_philo *p, t_waiter *w, int index)
 	if (p[index].nb_times_eat == w->nb_meal)
 	{
 		if (++w->all_eat == w->nb_philos)
-		{
-			pthread_mutex_lock(&w->print);
-			printf("All ate\n");
-			pthread_mutex_unlock(&w->print);
 			return (true);
-		}
 	}
 	return (false);
 }

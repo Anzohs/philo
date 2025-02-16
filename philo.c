@@ -6,7 +6,7 @@
 /*   By: hladeiro <hladeiro@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:04:52 by hladeiro          #+#    #+#             */
-/*   Updated: 2025/02/16 18:24:28 by hladeiro         ###   ########.fr       */
+/*   Updated: 2025/02/16 18:33:07 by hladeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,5 +46,3 @@ int	main(int argc, char *argv[])
 	philo_start(w);
 	return (free(w), 1);
 }
-
-// https://github.com/wtandoor/philo42/blob

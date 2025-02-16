@@ -6,7 +6,7 @@
 /*   By: hladeiro <hladeiro@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 16:49:33 by hladeiro          #+#    #+#             */
-/*   Updated: 2025/02/16 18:27:37 by hladeiro         ###   ########.fr       */
+/*   Updated: 2025/02/16 20:28:51 by hladeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ int	print_term(t_philo *p, t_waiter *w, t_action act)
 	if (act == DEAD)
 		return (printf("%d %d died\n", time_dif(w->t_start), p->id), \
 			pthread_mutex_unlock(&w->print), 1);
-	if (act == ALL_EAT)
-		return (pthread_mutex_unlock(&w->print), printf(""));
+	if (w->dead)
+		return (1);
 	if (act == EAT)
 		(printf("%d %d is eating\n", time_dif(w->t_start), p->id));
 	else if (act == SLEEP)
