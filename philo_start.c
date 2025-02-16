@@ -6,7 +6,7 @@
 /*   By: hladeiro <hladeiro@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:04:59 by hladeiro          #+#    #+#             */
-/*   Updated: 2025/02/13 19:05:02 by hladeiro         ###   ########.fr       */
+/*   Updated: 2025/02/16 18:28:15 by hladeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,7 @@ static bool	is_dead(t_philo *p, t_waiter *w, int index)
 	if (w->t_to_die + 1 <= time_dif(w->t_start) - p[index].last_meal)
 	{
 		w->dead = true;
-		pthread_mutex_lock(&w->print);
-		printf("dead %i\n", p[index].id);
-		pthread_mutex_unlock(&w->print);
+		print_term(p, w, DEAD);
 		return (true);
 	}
 	if (p[index].nb_times_eat == w->nb_meal)
@@ -66,7 +64,9 @@ static void	*routine(void *tp)
 	while (!ph->w->dead && ph->nb_times_eat != ph->w->nb_meal)
 	{
 		pthread_mutex_lock(ph->l_fork);
+		print_term(ph, ph->w, LEFT);
 		pthread_mutex_lock(ph->r_fork);
+		print_term(ph, ph->w, RIGHT);
 		philo_eat(ph, ph->w);
 		pthread_mutex_unlock(ph->l_fork);
 		pthread_mutex_unlock(ph->r_fork);

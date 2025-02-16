@@ -6,7 +6,7 @@
 /*   By: hladeiro <hladeiro@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:04:00 by hladeiro          #+#    #+#             */
-/*   Updated: 2025/02/13 19:04:01 by hladeiro         ###   ########.fr       */
+/*   Updated: 2025/02/16 17:32:54 by hladeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,16 @@ typedef struct s_waiter
 	bool				dead;
 	t_philo				*p;
 }						t_waiter;
+
+typedef enum s_ation
+{
+	EAT,
+	SLEEP,
+	THINK,
+	LEFT,
+	RIGHT,
+	ALL_EAT,
+	DEAD
+}						t_action;
 
 #endif

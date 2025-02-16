@@ -6,7 +6,7 @@
 /*   By: hladeiro <hladeiro@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:04:52 by hladeiro          #+#    #+#             */
-/*   Updated: 2025/02/13 19:04:53 by hladeiro         ###   ########.fr       */
+/*   Updated: 2025/02/16 18:24:28 by hladeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static int	error_argc(void)
 	printf("%s", ERROR_ARGS);
 	printf("%s", ERROR_USAGE);
 	printf("%s", ERROR_USAGE1);
+	printf("%s", ERROR_USAGE2);
 	return (0);
 }
 
