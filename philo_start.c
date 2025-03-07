@@ -6,16 +6,16 @@
 /*   By: hladeiro <hladeiro@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:04:59 by hladeiro          #+#    #+#             */
-/*   Updated: 2025/02/16 18:32:28 by hladeiro         ###   ########.fr       */
+/*   Updated: 2025/03/07 21:29:14 by hladeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include "structs.h"
 
-static bool	is_dead(t_philo *p, t_waiter *w, int index)
+static bool	is_dead(t_philo *p, t_waiter *w, long time, int index)
 {
-	if (w->t_to_die + 1 <= time_dif(w->t_start) - p[index].last_meal)
+	if (w->t_to_die + 1 <= time_dif(w->t_start) - time)
 	{
 		w->dead = true;
 		print_term(p, w, DEAD);
@@ -32,6 +32,7 @@ static bool	is_dead(t_philo *p, t_waiter *w, int index)
 static void	*philo_dead(void *tmp)
 {
 	t_waiter	*w;
+	long		time;
 	int			i;
 
 	w = (t_waiter *)tmp;
@@ -41,7 +42,10 @@ static void	*philo_dead(void *tmp)
 		w->all_eat = 0;
 		while (++i < w->nb_philos)
 		{
-			if (is_dead(w->p, w, i))
+			pthread_mutex_lock(w->p_t);
+			time = w->p[i].last_meal;
+			pthread_mutex_unlock(w->p_t);
+			if (is_dead(w->p, w, time, i))
 				return (NULL);
 			my_sleep(1);
 		}
@@ -108,7 +112,11 @@ void	philo_start(t_waiter *w)
 	w->t_start = get_time();
 	init_philo(w, thread);
 	while (++i < w->nb_philos)
+	{
+		pthread_mutex_lock(&w->p_t[i]);
+		pthread_mutex_unlock(&w->p_t[i]);
 		pthread_mutex_destroy(&w->p_t[i]);
+	}
 	pthread_join(thread[i], NULL);
 	pthread_mutex_destroy(&w->print);
 	free(thread);
