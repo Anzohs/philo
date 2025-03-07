@@ -12,6 +12,7 @@
 
 #include "philo.h"
 #include "structs.h"
+#include <pthread.h>
 
 static bool	is_dead(t_philo *p, t_waiter *w, long time, int index)
 {
@@ -82,7 +83,6 @@ static void	init_philo(t_waiter *w, pthread_t *t)
 	i = -1;
 	while (++i < w->nb_philos)
 	{
-		pthread_mutex_init(&w->p_t[i], NULL);
 		w->p[i].id = i + 1;
 		w->p[i].last_meal = 0;
 		w->p[i].r_fork = &w->p_t[i];
@@ -95,6 +95,15 @@ static void	init_philo(t_waiter *w, pthread_t *t)
 	}
 	usleep(200);
 	pthread_create(&t[i], NULL, &philo_dead, (void *)(w));
+}
+
+void	fork_mutex_init(t_waiter *w)
+{
+	long	i;
+
+	i = -1;
+	while (++i < w->nb_philos)
+		pthread_mutex_init(&w->p_t[i], NULL);
 }
 
 void	philo_start(t_waiter *w)
@@ -110,6 +119,7 @@ void	philo_start(t_waiter *w)
 	w->dead = false;
 	pthread_mutex_init(&w->print, NULL);
 	w->t_start = get_time();
+	fork_mutex_init(w);
 	init_philo(w, thread);
 	while (++i < w->nb_philos)
 	{
