@@ -13,20 +13,28 @@
 #include "philo.h"
 #include "structs.h"
 #include <pthread.h>
+#include <sys/_pthread/_pthread_mutex_t.h>
+#include <sys/_pthread/_pthread_t.h>
 
 static bool	is_dead(t_philo *p, t_waiter *w, long time, int index)
 {
+	pthread_mutex_lock(&w->print);
 	if (w->t_to_die + 1 <= time_dif(w->t_start) - time)
 	{
 		w->dead = true;
+		pthread_mutex_unlock(&w->print);
 		print_term(p, w, DEAD);
 		return (true);
 	}
 	if (p[index].nb_times_eat == w->nb_meal)
 	{
 		if (++w->all_eat == w->nb_philos)
+		{
+			pthread_mutex_unlock(&w->print);
 			return (true);
+		}
 	}
+	pthread_mutex_unlock(&w->print);
 	return (false);
 }
 
@@ -43,9 +51,9 @@ static void	*philo_dead(void *tmp)
 		w->all_eat = 0;
 		while (++i < w->nb_philos)
 		{
-			pthread_mutex_lock(w->p_t);
+			pthread_mutex_lock(&w->print);
 			time = w->p[i].last_meal;
-			pthread_mutex_unlock(w->p_t);
+			pthread_mutex_unlock(&w->print);
 			if (is_dead(w->p, w, time, i))
 				return (NULL);
 			my_sleep(1);
@@ -57,6 +65,7 @@ static void	*philo_dead(void *tmp)
 static void	*routine(void *tp)
 {
 	t_philo	*ph;
+
 
 	ph = (t_philo *)tp;
 	if (ph->id % 2 == 0)
@@ -83,6 +92,7 @@ static void	init_philo(t_waiter *w, pthread_t *t)
 	i = -1;
 	while (++i < w->nb_philos)
 	{
+		pthread_mutex_init(&w->p_t[i], NULL);
 		w->p[i].id = i + 1;
 		w->p[i].last_meal = 0;
 		w->p[i].r_fork = &w->p_t[i];

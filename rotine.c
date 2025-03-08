@@ -12,6 +12,8 @@
 
 #include "philo.h"
 #include "structs.h"
+#include <pthread.h>
+#include <sys/_pthread/_pthread_mutex_t.h>
 
 void	philo_sleep(t_philo *p, t_waiter *w)
 {
@@ -26,15 +28,24 @@ void	philo_eat(t_philo *p, t_waiter *w)
 	if (w->dead)
 		return ;
 	print_term(p, w, EAT);
+	pthread_mutex_lock(&w->print);
 	p->last_meal = time_dif(w->t_start);
+	pthread_mutex_unlock(&w->print);
 	my_sleep((int)w->t_to_eat);
 	if (p->nb_times_eat < INT_MAX)
+	{
+		pthread_mutex_lock(&w->print);
 		p->nb_times_eat++;
+		pthread_mutex_unlock(&w->print);
+
+	}
 }
 
 void	philo_think(t_philo *p, t_waiter *w)
 {
+	pthread_mutex_lock(&w->print);
 	if (w->dead)
-		return ;
+		return ((void)pthread_mutex_unlock(&w->print));
+	pthread_mutex_unlock(&w->print);
 	print_term(p, w, THINK);
 }
