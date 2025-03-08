@@ -13,6 +13,7 @@
 #include "philo.h"
 #include "structs.h"
 #include <pthread.h>
+#include <stdbool.h>
 #include <sys/_pthread/_pthread_mutex_t.h>
 #include <sys/_pthread/_pthread_t.h>
 
@@ -62,23 +63,34 @@ static void	*philo_dead(void *tmp)
 	return (NULL);
 }
 
+static bool	loop(t_philo *tp)
+{
+	bool	is_dead;
+	int		i;
+
+	pthread_mutex_lock(&tp->w->print);
+	is_dead = tp->w->dead;
+	i = tp->nb_times_eat;
+	pthread_mutex_unlock(&tp->w->print);
+	return (!is_dead && i != tp->w->nb_meal);
+}
+
 static void	*routine(void *tp)
 {
 	t_philo	*ph;
 
-
 	ph = (t_philo *)tp;
 	if (ph->id % 2 == 0)
 		my_sleep((int)ph->w->t_to_eat);
-	while (!ph->w->dead && ph->nb_times_eat != ph->w->nb_meal)
+	while (loop(ph))
 	{
 		pthread_mutex_lock(ph->l_fork);
+		pthread_mutex_unlock(ph->l_fork);
 		print_term(ph, ph->w, LEFT);
 		pthread_mutex_lock(ph->r_fork);
+		pthread_mutex_unlock(ph->r_fork);
 		print_term(ph, ph->w, RIGHT);
 		philo_eat(ph, ph->w);
-		pthread_mutex_unlock(ph->l_fork);
-		pthread_mutex_unlock(ph->r_fork);
 		philo_sleep(ph, ph->w);
 		philo_think(ph, ph->w);
 	}
@@ -133,8 +145,7 @@ void	philo_start(t_waiter *w)
 	init_philo(w, thread);
 	while (++i < w->nb_philos)
 	{
-		pthread_mutex_lock(&w->p_t[i]);
-		pthread_mutex_unlock(&w->p_t[i]);
+		pthread_join(thread[i], NULL);
 		pthread_mutex_destroy(&w->p_t[i]);
 	}
 	pthread_join(thread[i], NULL);

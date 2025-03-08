@@ -11,15 +11,22 @@
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <pthread.h>
 
 int	print_term(t_philo *p, t_waiter *w, t_action act)
 {
 	pthread_mutex_lock(&w->print);
 	if (act == DEAD)
-		return (printf("%d %d died\n", time_dif(w->t_start), p->id), \
-			pthread_mutex_unlock(&w->print), 1);
-	if (w->dead)
+	{
+		printf("%d %d died\n", time_dif(w->t_start), p->id);
+		pthread_mutex_unlock(&w->print);
 		return (1);
+	}
+	if (w->dead)
+	{
+		pthread_mutex_unlock(&w->print);
+		return (1);
+	}
 	if (act == EAT)
 		(printf("%d %d is eating\n", time_dif(w->t_start), p->id));
 	else if (act == SLEEP)
