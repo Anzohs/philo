@@ -14,8 +14,6 @@
 #include "structs.h"
 #include <pthread.h>
 #include <stdbool.h>
-#include <sys/_pthread/_pthread_mutex_t.h>
-#include <sys/_pthread/_pthread_t.h>
 
 static bool	is_dead(t_philo *p, t_waiter *w, long time, int index)
 {
@@ -104,7 +102,6 @@ static void	init_philo(t_waiter *w, pthread_t *t)
 	i = -1;
 	while (++i < w->nb_philos)
 	{
-		pthread_mutex_init(&w->p_t[i], NULL);
 		w->p[i].id = i + 1;
 		w->p[i].last_meal = 0;
 		w->p[i].r_fork = &w->p_t[i];

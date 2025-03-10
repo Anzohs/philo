@@ -13,7 +13,6 @@
 #include "philo.h"
 #include "structs.h"
 #include <pthread.h>
-#include <sys/_pthread/_pthread_mutex_t.h>
 
 void	philo_sleep(t_philo *p, t_waiter *w)
 {
