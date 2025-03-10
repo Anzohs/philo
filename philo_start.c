@@ -83,10 +83,10 @@ static void	*routine(void *tp)
 	while (loop(ph))
 	{
 		pthread_mutex_lock(ph->l_fork);
-		pthread_mutex_unlock(ph->l_fork);
-		print_term(ph, ph->w, LEFT);
 		pthread_mutex_lock(ph->r_fork);
+		pthread_mutex_unlock(ph->l_fork);
 		pthread_mutex_unlock(ph->r_fork);
+		print_term(ph, ph->w, LEFT);
 		print_term(ph, ph->w, RIGHT);
 		philo_eat(ph, ph->w);
 		philo_sleep(ph, ph->w);
