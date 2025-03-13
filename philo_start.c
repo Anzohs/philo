@@ -6,7 +6,7 @@
 /*   By: hladeiro <hladeiro@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:04:59 by hladeiro          #+#    #+#             */
-/*   Updated: 2025/03/07 21:29:14 by hladeiro         ###   ########.fr       */
+/*   Updated: 2025/03/13 21:41:47 by hladeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,12 @@
 #include "structs.h"
 #include <pthread.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 static bool	is_dead(t_philo *p, t_waiter *w, long time, int index)
 {
 	pthread_mutex_lock(&w->print);
-	if (w->t_to_die + 1 <= time_dif(w->t_start) - time)
+	if (w->t_to_die - 1 <= time_dif(w->t_start) - time)
 	{
 		w->dead = true;
 		pthread_mutex_unlock(&w->print);
@@ -55,7 +56,7 @@ static void	*philo_dead(void *tmp)
 			pthread_mutex_unlock(&w->print);
 			if (is_dead(w->p, w, time, i))
 				return (NULL);
-			my_sleep(1);
+			usleep(1000);
 		}
 	}
 	return (NULL);
@@ -78,8 +79,17 @@ static void	*routine(void *tp)
 	t_philo	*ph;
 
 	ph = (t_philo *)tp;
+
+	if (ph->w->nb_philos == 1)
+	{
+		pthread_mutex_lock(ph->l_fork);
+		print_term(ph, ph->w, LEFT);
+		my_sleep((int)ph->w->t_to_die);
+		pthread_mutex_unlock(ph->l_fork);
+		return (NULL);
+	}
 	if (ph->id % 2 == 0)
-		my_sleep((int)ph->w->t_to_eat);
+		usleep(ph->w->t_to_sleep);
 	while (loop(ph))
 	{
 		pthread_mutex_lock(ph->l_fork);
