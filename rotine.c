@@ -6,13 +6,38 @@
 /*   By: hladeiro <hladeiro@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:05:09 by hladeiro          #+#    #+#             */
-/*   Updated: 2025/02/16 18:11:07 by hladeiro         ###   ########.fr       */
+/*   Updated: 2025/03/14 20:54:43 by hladeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include "structs.h"
 #include <pthread.h>
+
+void	my_routine(t_philo *ph)
+{
+	pthread_mutex_lock(ph->l_fork);
+	pthread_mutex_lock(ph->r_fork);
+	print_term(ph, ph->w, LEFT);
+	print_term(ph, ph->w, RIGHT);
+	philo_eat(ph, ph->w);
+	pthread_mutex_unlock(ph->l_fork);
+	pthread_mutex_unlock(ph->r_fork);
+	philo_sleep(ph, ph->w);
+	philo_think(ph, ph->w);
+}
+
+bool	loop(t_philo *tp)
+{
+	bool	is_dead;
+	int		i;
+
+	pthread_mutex_lock(&tp->w->print);
+	is_dead = tp->w->dead;
+	i = tp->nb_times_eat;
+	pthread_mutex_unlock(&tp->w->print);
+	return (!is_dead && i != tp->w->nb_meal);
+}
 
 void	philo_sleep(t_philo *p, t_waiter *w)
 {

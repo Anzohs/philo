@@ -6,7 +6,7 @@
 /*   By: hladeiro <hladeiro@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:04:59 by hladeiro          #+#    #+#             */
-/*   Updated: 2025/03/13 21:41:47 by hladeiro         ###   ########.fr       */
+/*   Updated: 2025/03/14 20:55:18 by hladeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,24 +59,11 @@ static void	*philo_dead(void *tmp)
 	return (NULL);
 }
 
-static bool	loop(t_philo *tp)
-{
-	bool	is_dead;
-	int		i;
-
-	pthread_mutex_lock(&tp->w->print);
-	is_dead = tp->w->dead;
-	i = tp->nb_times_eat;
-	pthread_mutex_unlock(&tp->w->print);
-	return (!is_dead && i != tp->w->nb_meal);
-}
-
 static void	*routine(void *tp)
 {
 	t_philo	*ph;
 
 	ph = (t_philo *)tp;
-
 	if (ph->w->nb_philos == 1)
 	{
 		pthread_mutex_lock(ph->l_fork);
@@ -88,17 +75,7 @@ static void	*routine(void *tp)
 	if (ph->id % 2 == 0)
 		my_sleep(ph->w->t_to_sleep);
 	while (loop(ph))
-	{
-		pthread_mutex_lock(ph->l_fork);
-		pthread_mutex_lock(ph->r_fork);
-		print_term(ph, ph->w, LEFT);
-		print_term(ph, ph->w, RIGHT);
-		philo_eat(ph, ph->w);
-		pthread_mutex_unlock(ph->l_fork);
-		pthread_mutex_unlock(ph->r_fork);
-		philo_sleep(ph, ph->w);
-		philo_think(ph, ph->w);
-	}
+		my_routine(ph);
 	return (NULL);
 }
 
@@ -123,27 +100,16 @@ static void	init_philo(t_waiter *w, pthread_t *t)
 	pthread_create(&t[i], NULL, &philo_dead, (void *)(w));
 }
 
-void	fork_mutex_init(t_waiter *w)
-{
-	long	i;
-
-	i = -1;
-	while (++i < w->nb_philos)
-		pthread_mutex_init(&w->p_t[i], NULL);
-}
-
 void	philo_start(t_waiter *w)
 {
 	pthread_t	*thread;
-	int			i;
 
-	i = -1;
 	w->p = (t_philo *)ft_calloc(sizeof(t_philo), (w->nb_philos));
 	if (!w->p)
-		return (printf("Memory allocation failed"), (void)i);
+		return (printf("Memory allocation failed"), (void)0);
 	thread = (pthread_t *)ft_calloc(sizeof(pthread_t), w->nb_philos + 1);
 	if (!thread)
-		return (pritnf("Memory allocation failed"), free(w->p));
+		return (printf("Memory allocation failed"), free(w->p));
 	w->p_t = (pthread_mutex_t *)ft_calloc(sizeof(pthread_mutex_t), w->nb_philos
 			+ 1);
 	if (!w->p_t)
@@ -153,14 +119,6 @@ void	philo_start(t_waiter *w)
 	w->t_start = get_time();
 	fork_mutex_init(w);
 	init_philo(w, thread);
-	while (++i < w->nb_philos)
-	{
-		pthread_join(thread[i], NULL);
-		pthread_mutex_lock(&w->p_t[i]);
-		pthread_mutex_unlock(&w->p_t[i]);
-		pthread_mutex_destroy(&w->p_t[i]);
-	}
-	pthread_join(thread[i], NULL);
-	pthread_mutex_destroy(&w->print);
+	free_thread_mutex(w, thread);
 	return (free(thread), free(w->p), free(w->p_t));
 }
