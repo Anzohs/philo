@@ -17,7 +17,7 @@
 void	philo_sleep(t_philo *p, t_waiter *w)
 {
 	pthread_mutex_lock(&w->print);
-	if (w->dead)
+	if (w->dead || p->nb_times_eat == w->nb_meal)
 	{
 		pthread_mutex_unlock(&w->print);
 		return ;
@@ -30,7 +30,7 @@ void	philo_sleep(t_philo *p, t_waiter *w)
 void	philo_eat(t_philo *p, t_waiter *w)
 {
 	pthread_mutex_lock(&w->print);
-	if (w->dead)
+	if (w->dead || p->nb_times_eat == w->nb_meal)
 	{
 		pthread_mutex_unlock(&w->print);
 		return ;
@@ -54,7 +54,7 @@ void	philo_eat(t_philo *p, t_waiter *w)
 void	philo_think(t_philo *p, t_waiter *w)
 {
 	pthread_mutex_lock(&w->print);
-	if (w->dead)
+	if (w->dead || p->nb_times_eat == w->nb_meal)
 	{
 		pthread_mutex_unlock(&w->print);
 		return ;

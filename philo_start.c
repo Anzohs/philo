@@ -30,6 +30,7 @@ static bool	is_dead(t_philo *p, t_waiter *w, long time, int index)
 	{
 		if (++w->all_eat == w->nb_philos)
 		{
+			w->dead = true;
 			pthread_mutex_unlock(&w->print);
 			return (true);
 		}
@@ -56,7 +57,6 @@ static void	*philo_dead(void *tmp)
 			pthread_mutex_unlock(&w->print);
 			if (is_dead(w->p, w, time, i))
 				return (NULL);
-			usleep(1000);
 		}
 	}
 	return (NULL);
@@ -89,16 +89,16 @@ static void	*routine(void *tp)
 		return (NULL);
 	}
 	if (ph->id % 2 == 0)
-		usleep(ph->w->t_to_sleep);
+		my_sleep(ph->w->t_to_sleep);
 	while (loop(ph))
 	{
 		pthread_mutex_lock(ph->l_fork);
 		pthread_mutex_lock(ph->r_fork);
-		pthread_mutex_unlock(ph->l_fork);
-		pthread_mutex_unlock(ph->r_fork);
 		print_term(ph, ph->w, LEFT);
 		print_term(ph, ph->w, RIGHT);
 		philo_eat(ph, ph->w);
+		pthread_mutex_unlock(ph->l_fork);
+		pthread_mutex_unlock(ph->r_fork);
 		philo_sleep(ph, ph->w);
 		philo_think(ph, ph->w);
 	}
