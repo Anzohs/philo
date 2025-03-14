@@ -12,14 +12,11 @@
 
 #include "philo.h"
 #include "structs.h"
-#include <pthread.h>
-#include <stdbool.h>
-#include <unistd.h>
 
 static bool	is_dead(t_philo *p, t_waiter *w, long time, int index)
 {
 	pthread_mutex_lock(&w->print);
-	if (w->t_to_die - 1 <= time_dif(w->t_start) - time)
+	if (w->t_to_die <= time_dif(w->t_start) - time)
 	{
 		w->dead = true;
 		pthread_mutex_unlock(&w->print);
@@ -142,9 +139,15 @@ void	philo_start(t_waiter *w)
 
 	i = -1;
 	w->p = (t_philo *)ft_calloc(sizeof(t_philo), (w->nb_philos));
+	if (!w->p)
+		return (printf("Memory allocation failed"), (void)i);
 	thread = (pthread_t *)ft_calloc(sizeof(pthread_t), w->nb_philos + 1);
+	if (!thread)
+		return (pritnf("Memory allocation failed"), free(w->p));
 	w->p_t = (pthread_mutex_t *)ft_calloc(sizeof(pthread_mutex_t), w->nb_philos
 			+ 1);
+	if (!w->p_t)
+		return (printf("Memory allocation failed"), free(w->p), free(thread));
 	w->dead = false;
 	pthread_mutex_init(&w->print, NULL);
 	w->t_start = get_time();
@@ -153,11 +156,11 @@ void	philo_start(t_waiter *w)
 	while (++i < w->nb_philos)
 	{
 		pthread_join(thread[i], NULL);
+		pthread_mutex_lock(&w->p_t[i]);
+		pthread_mutex_unlock(&w->p_t[i]);
 		pthread_mutex_destroy(&w->p_t[i]);
 	}
 	pthread_join(thread[i], NULL);
 	pthread_mutex_destroy(&w->print);
-	free(thread);
-	free(w->p);
-	free(w->p_t);
+	return (free(thread), free(w->p), free(w->p_t));
 }

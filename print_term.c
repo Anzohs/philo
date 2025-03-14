@@ -34,10 +34,10 @@ int	print_term(t_philo *p, t_waiter *w, t_action act)
 	else if (act == THINK)
 		printf("%d %d is thinking\n", time_dif(w->t_start), p->id);
 	else if (act == LEFT)
-		(printf("%d %d has taken the left fork\n", \
+		(printf("%d %d has taken the fork\n", \
 				time_dif(w->t_start), p->id));
 	else if (act == RIGHT)
-		(printf("%d %d has taken the right fork\n", \
+		(printf("%d %d has taken the fork\n", \
 			time_dif(w->t_start), p->id));
 	pthread_mutex_unlock(&w->print);
 	return (0);
