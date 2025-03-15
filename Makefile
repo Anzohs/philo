@@ -1,7 +1,7 @@
 NAME = philo
 CC = cc
-FLAGS = -Wall -Wextra -Werror -pthread -g -O3
-SRC = ft_atol.c ft_calloc.c get_time.c parse_args.c philo.c philo_start.c rotine.c waiter_init.c print_term.c philo_free.c
+FLAGS = -Wall -Wextra -Werror -pthread  -fsanitize=thread  -g -O3
+SRC = ft_atol.c ft_calloc.c get_time.c parse_args.c philo.c philo_start.c rotine.c waiter_init.c print_term.c philo_free.c ft_swap.c
 OBJ_DIR = obj
 
 OBJ = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))

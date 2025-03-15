@@ -6,7 +6,7 @@
 /*   By: hladeiro <hladeiro@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:03:46 by hladeiro          #+#    #+#             */
-/*   Updated: 2025/03/14 20:55:04 by hladeiro         ###   ########.fr       */
+/*   Updated: 2025/03/15 13:24:17 by hladeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int		print_term(t_philo *p, t_waiter *w, t_action act);
 void	fork_mutex_init(t_waiter *w);
 void	my_routine(t_philo *ph);
 bool	loop(t_philo *tp);
+void 	ft_swap(void **l, void **r);
 
 void	free_thread_mutex(t_waiter *w, pthread_t *thread);
 

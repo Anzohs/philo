@@ -88,12 +88,12 @@ static void	init_philo(t_waiter *w, pthread_t *t)
 	{
 		w->p[i].id = i + 1;
 		w->p[i].last_meal = 0;
-		w->p[i].r_fork = &w->p_t[i];
+		w->p[i].l_fork = &w->p_t[i];
 		w->p[i].w = w;
 		if (i != w->nb_philos - 1)
-			w->p[i].l_fork = &w->p_t[i + 1];
+			w->p[i].r_fork = &w->p_t[i + 1];
 		else
-			w->p[i].l_fork = &w->p_t[0];
+			w->p[i].r_fork = &w->p_t[0];
 		pthread_create(&t[i], NULL, &routine, (void *)(&w->p[i]));
 	}
 	usleep(200);
