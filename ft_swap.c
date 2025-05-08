@@ -10,12 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-void 	ft_swap(void **l, void **r)
+void	ft_swap(void **l, void **r)
 {
-		void 	*tmp;
+	void	*tmp;
 
-		tmp = *l;
-		*l = *r;
-		*r = tmp;
+	tmp = *l;
+	*l = *r;
+	*r = tmp;
 }

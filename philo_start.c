@@ -6,7 +6,7 @@
 /*   By: hladeiro <hladeiro@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:04:59 by hladeiro          #+#    #+#             */
-/*   Updated: 2025/03/14 20:55:18 by hladeiro         ###   ########.fr       */
+/*   Updated: 2025/03/19 19:24:31 by hladeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ static void	init_philo(t_waiter *w, pthread_t *t)
 			w->p[i].r_fork = &w->p_t[0];
 		pthread_create(&t[i], NULL, &routine, (void *)(&w->p[i]));
 	}
-	usleep(200);
 	pthread_create(&t[i], NULL, &philo_dead, (void *)(w));
 }
 

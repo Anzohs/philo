@@ -6,7 +6,7 @@
 /*   By: hladeiro <hladeiro@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:05:09 by hladeiro          #+#    #+#             */
-/*   Updated: 2025/03/15 14:11:39 by hladeiro         ###   ########.fr       */
+/*   Updated: 2025/03/19 19:26:02 by hladeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,13 @@ void	philo_sleep(t_philo *p, t_waiter *w)
 	}
 	pthread_mutex_unlock(&w->print);
 	print_term(p, w, SLEEP);
+	pthread_mutex_lock(&w->print);
+	if (w->dead || p->nb_times_eat == w->nb_meal)
+	{
+		pthread_mutex_unlock(&w->print);
+		return ;
+	}
+	pthread_mutex_unlock(&w->print);
 	my_sleep((int)w->t_to_sleep);
 }
 

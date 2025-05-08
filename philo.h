@@ -48,7 +48,7 @@ int		print_term(t_philo *p, t_waiter *w, t_action act);
 void	fork_mutex_init(t_waiter *w);
 void	my_routine(t_philo *ph);
 bool	loop(t_philo *tp);
-void 	ft_swap(void **l, void **r);
+void	ft_swap(void **l, void **r);
 
 void	free_thread_mutex(t_waiter *w, pthread_t *thread);
 
